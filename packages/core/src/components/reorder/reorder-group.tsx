@@ -5,7 +5,7 @@ import { CSS_PROP } from '../animation-controller/constants';
 
 // const AUTO_SCROLL_MARGIN = 60;
 //  const SCROLL_JUMP = 10;
-const ITEM_REORDER_ACTIVE = 'reorder-active';
+const ITEM_REORDER_SELECTED = 'reorder-selected';
 
 
 export class ReorderIndexes {
@@ -189,7 +189,7 @@ export class ReorderGroup {
       return false;
     }
     const target = ev.event.target as HTMLElement;
-    const reorderEle = target.closest('[reorderAnchor]') as HTMLElement;
+    const reorderEle = target.closest('ion-reorder') as HTMLElement;
     if (!reorderEle) {
       return false;
     }
@@ -226,7 +226,7 @@ export class ReorderGroup {
     this.lastToIndex = indexForItem(item);
     this.selectedItemHeight = item.offsetHeight;
 
-    item.classList.add(ITEM_REORDER_ACTIVE);
+    item.classList.add(ITEM_REORDER_SELECTED);
   }
 
   private onDragMove(ev: GestureDetail) {
@@ -285,7 +285,7 @@ export class ReorderGroup {
 
     const reorderInactive = () => {
       this.selectedItemEle.style.transition = '';
-      this.selectedItemEle.classList.remove(ITEM_REORDER_ACTIVE);
+      this.selectedItemEle.classList.remove(ITEM_REORDER_SELECTED);
       this.selectedItemEle = null;
     };
     if (toIndex === fromIndex) {

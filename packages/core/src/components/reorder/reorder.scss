@@ -5,21 +5,13 @@ $reorder-initial-transform: 160% !default;
 // Reorder group general
 // --------------------------------------------------
 
-.reorder-enabled [reorderAnchor] {
-  display: block;
-}
-
 .reorder-list-active ion-gesture > * {
   transition: transform 300ms;
 
   will-change: transform;
 }
 
-.reorder-list-active ion-gesture *:not([reorderAnchor]) {
-  pointer-events: none;
-}
-
-.reorder-active {
+.reorder-selected {
   position: relative;
   z-index: 100;
 
@@ -34,31 +26,46 @@ $reorder-initial-transform: 160% !default;
 // Reorder icon
 // --------------------------------------------------
 
-ion-reorder {
-  @include transform(translate3d($reorder-initial-transform, 0, 0));
+ion-reorder.no-hide {
+  display: block;
+  visibility: normal;
+}
 
+ion-reorder:not(.no-hide) {
+  display: none;
+
+  pointer-events: all !important;
+  touch-action: manipulation;
+}
+
+.reorder-enabled ion-reorder {
+  display: block;
+}
+
+ion-reorder[slot] {
   margin-top: auto !important;
   margin-bottom: auto !important;
 
-  font-size: 1.7em;
-  opacity: .25;
-
   line-height: 0;
+}
+
+ion-reorder[slot="start"] {
+  order: -1;
+}
+
+.reorder-icon {
+  @include transform(translate3d($reorder-initial-transform, 0, 0));
+
+  font-size: 1.3em;
+  opacity: .25;
 
   transition: transform 140ms ease-in;
 }
 
-ion-reorder ion-icon {
-  pointer-events: none;
-}
-
-ion-reorder[slot="start"] {
+ion-reorder[slot="start"] .reorder-icon {
   @include transform(translate3d(-$reorder-initial-transform, 0, 0));
-
-  order: -1;
 }
 
-.reorder-visible ion-reorder {
+.reorder-visible ion-reorder .reorder-icon {
   @include transform(translate3d(0, 0, 0));
 }
-
