@@ -558,9 +558,6 @@ declare global {
   namespace JSXElements {
       export interface IonContentAttributes extends HTMLAttributes {
         
-          ionScrollStart?: any,
-          ionScroll?: any,
-          ionScrollEnd?: any,
           fullscreen?: boolean | "true" | "false"
       }
   }
@@ -589,7 +586,6 @@ declare global {
   namespace JSXElements {
       export interface IonDatetimeAttributes extends HTMLAttributes {
         
-          pickerCtrl?: any,
           disabled?: boolean | "true" | "false",
           min?: any,
           max?: any,
@@ -607,8 +603,7 @@ declare global {
           dayNames?: any,
           dayShortNames?: any,
           pickerOptions?: any,
-          placeholder?: any,
-          value?: any
+          placeholder?: any
       }
   }
 }
@@ -928,6 +923,66 @@ declare global {
   namespace JSXElements {
       export interface IonHeaderAttributes extends HTMLAttributes {
         
+      }
+  }
+}
+
+import { InfiniteScrollContent as IonInfiniteScrollContent } from './components/infinite-scroll/infinite-scroll-content';
+
+interface HTMLIonInfiniteScrollContentElement extends IonInfiniteScrollContent, HTMLElement {
+}
+declare var HTMLIonInfiniteScrollContentElement: {
+  prototype: HTMLIonInfiniteScrollContentElement;
+  new (): HTMLIonInfiniteScrollContentElement;
+};
+declare global {
+  interface HTMLElementTagNameMap {
+      "ion-infinite-scroll-content": HTMLIonInfiniteScrollContentElement;
+  }
+  interface ElementTagNameMap {
+      "ion-infinite-scroll-content": HTMLIonInfiniteScrollContentElement;
+  }
+  namespace JSX {
+      interface IntrinsicElements {
+          "ion-infinite-scroll-content": JSXElements.IonInfiniteScrollContentAttributes;
+      }
+  }
+  namespace JSXElements {
+      export interface IonInfiniteScrollContentAttributes extends HTMLAttributes {
+        
+          loadingSpinner?: any,
+          loadingText?: any
+      }
+  }
+}
+
+import { InfiniteScroll as IonInfiniteScroll } from './components/infinite-scroll/infinite-scroll';
+
+interface HTMLIonInfiniteScrollElement extends IonInfiniteScroll, HTMLElement {
+}
+declare var HTMLIonInfiniteScrollElement: {
+  prototype: HTMLIonInfiniteScrollElement;
+  new (): HTMLIonInfiniteScrollElement;
+};
+declare global {
+  interface HTMLElementTagNameMap {
+      "ion-infinite-scroll": HTMLIonInfiniteScrollElement;
+  }
+  interface ElementTagNameMap {
+      "ion-infinite-scroll": HTMLIonInfiniteScrollElement;
+  }
+  namespace JSX {
+      interface IntrinsicElements {
+          "ion-infinite-scroll": JSXElements.IonInfiniteScrollAttributes;
+      }
+  }
+  namespace JSXElements {
+      export interface IonInfiniteScrollAttributes extends HTMLAttributes {
+        
+          complete?: any,
+          threshold?: any,
+          enabled?: boolean | "true" | "false",
+          position?: any
       }
   }
 }
@@ -2202,9 +2257,9 @@ declare global {
         
           enabled?: boolean | "true" | "false",
           jsScroll?: boolean | "true" | "false",
-          ionScrollStart?: any,
-          ionScroll?: any,
-          ionScrollEnd?: any
+          onionScrollStart?: any,
+          onionScroll?: any,
+          onionScrollEnd?: any
       }
   }
 }
