@@ -138,6 +138,14 @@ export function getParentElement(elm: any) {
   return null;
 }
 
+export function getPageElement(el: HTMLElement) {
+  const page = el.closest('ion-page,.ion-page,page-inner');
+  if (page) {
+    return page;
+  }
+  return getParentElement(el);
+}
+
 export function applyStyles(elm: HTMLElement, styles: {[styleProp: string]: string|number}) {
   const styleProps = Object.keys(styles);
 
@@ -146,25 +154,6 @@ export function applyStyles(elm: HTMLElement, styles: {[styleProp: string]: stri
       (<any>elm.style)[styleProps[i]] = styles[styleProps[i]];
     }
   }
-}
-
-export function getToolbarHeight(toolbarTagName: string, pageChildren: HTMLElement[], mode: string, iosHeight: string, defaultHeight: string) {
-  for (var i = 0; i < pageChildren.length; i++) {
-    if (pageChildren[i].tagName === toolbarTagName) {
-      var headerHeight = pageChildren[i].getAttribute(`${mode}-height`);
-      if (headerHeight) {
-        return headerHeight;
-      }
-
-      if (mode === 'ios') {
-        return iosHeight;
-      }
-
-      return defaultHeight;
-    }
-  }
-
-  return '';
 }
 
 /** @hidden */
