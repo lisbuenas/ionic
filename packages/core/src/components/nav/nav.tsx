@@ -36,7 +36,6 @@ export class IonNav implements Nav {
 
   componentDidLoad() {
     componentDidLoadImpl(this);
-
   }
 
   getViews(): ViewController[] {
@@ -118,10 +117,17 @@ export class IonNav implements Nav {
     return getFirstView(this);
   }
 
+  @Method()
+  resize() {
+    console.log('resize content');
+  }
+
   @Listen('navInit')
   navInitialized(event: CustomEvent) {
     navInitializedImpl(this, event);
   }
+
+
 
 
   protected render() {
@@ -134,7 +140,6 @@ export function componentDidLoadImpl(nav: Nav) {
   if (nav.root) {
     nav.setRoot(nav.root);
   }
-
 }
 
 export function pushImpl(nav: Nav, component: any, data: any, opts: NavOptions) {

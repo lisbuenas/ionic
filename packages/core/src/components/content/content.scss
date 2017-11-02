@@ -11,7 +11,7 @@ ion-content {
 
   width: 100%;
 
-  contain: layout size style;
+  contain: strict;
 
   padding: 0 !important; // scss-lint:disable all
 }
