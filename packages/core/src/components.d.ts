@@ -1752,6 +1752,11 @@ declare global {
           canSwipeBack?: any,
           getFirstView?: any,
           resize?: any,
+          addRoute?: any,
+          removeRoute?: any,
+          getState?: any,
+          setRouteId?: any,
+          getRoutes?: any,
           root?: any,
           delegate?: any
       }
@@ -2334,41 +2339,39 @@ declare global {
           mode?: string,
           color?: string,
         
-          url?: string,
+          path?: string,
           component?: string,
-          componentProps?: any,
-          router?: any
+          props?: any
       }
   }
 }
 
-import { Router as IonRouter } from './components/router/router';
+import { RouterController as IonRouterController } from './components/router/router-controller';
 
-interface HTMLIonRouterElement extends IonRouter, HTMLElement {
+interface HTMLIonRouterControllerElement extends IonRouterController, HTMLElement {
 }
-declare var HTMLIonRouterElement: {
-  prototype: HTMLIonRouterElement;
-  new (): HTMLIonRouterElement;
+declare var HTMLIonRouterControllerElement: {
+  prototype: HTMLIonRouterControllerElement;
+  new (): HTMLIonRouterControllerElement;
 };
 declare global {
   interface HTMLElementTagNameMap {
-      "ion-router": HTMLIonRouterElement;
+      "ion-router-controller": HTMLIonRouterControllerElement;
   }
   interface ElementTagNameMap {
-      "ion-router": HTMLIonRouterElement;
+      "ion-router-controller": HTMLIonRouterControllerElement;
   }
   namespace JSX {
       interface IntrinsicElements {
-          "ion-router": JSXElements.IonRouterAttributes;
+          "ion-router-controller": JSXElements.IonRouterControllerAttributes;
       }
   }
   namespace JSXElements {
-      export interface IonRouterAttributes extends HTMLAttributes {
+      export interface IonRouterControllerAttributes extends HTMLAttributes {
           mode?: string,
           color?: string,
         
-          root?: string,
-          match?: any
+          fragment?: boolean
       }
   }
 }
@@ -2933,14 +2936,11 @@ declare global {
           color?: string,
         
           _setActive?: any,
-          resize?: any,
           goToRoot?: any,
           getActive?: any,
           getNav?: any,
           btnId?: string,
-          root?: any,
-          rootParams?: any,
-          urlPath?: string,
+          path?: string,
           title?: string,
           icon?: string,
           badge?: string,
@@ -2984,7 +2984,9 @@ declare global {
           getIndex?: any,
           getTabs?: any,
           previousTab?: any,
-          resize?: any,
+          getState?: any,
+          getRoutes?: any,
+          setRouteId?: any,
           name?: string,
           tabbarHidden?: boolean,
           tabbarLayout?: string,

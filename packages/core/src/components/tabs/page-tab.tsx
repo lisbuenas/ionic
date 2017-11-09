@@ -1,6 +1,11 @@
 import { Component, Element } from '@stencil/core';
 import { HTMLIonTabsElement } from '../../index';
 
+export interface Route {
+  path: string | null;
+  component: string;
+}
+
 @Component({
   tag: 'page-tab'
 })

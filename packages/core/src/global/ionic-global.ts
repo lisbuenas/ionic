@@ -4,6 +4,7 @@ import { PLATFORM_CONFIGS, detectPlatforms } from './platform-configs';
 
 const Ionic = (window as any).Ionic = (window as any).Ionic || {};
 
+Context.useRouter = true;
 
 // create the Ionic.config from raw config object (if it exists)
 // and convert Ionic.config into a ConfigApi that has a get() fn

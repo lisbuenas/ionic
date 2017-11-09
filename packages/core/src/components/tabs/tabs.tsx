@@ -1,5 +1,5 @@
 import { Component, Element, Event, EventEmitter, Listen, Method, Prop, State } from '@stencil/core';
-import { Config, HTMLIonTabElement } from '../../index';
+import { Config, HTMLIonTabElement, NavState, RouterEntries } from '../../index';
 
 export interface NavOptions { }
 // import { isPresent } from '../../utils/helpers';
@@ -186,12 +186,22 @@ export class Tabs {
    * @output {any} Emitted when the tab changes.
    */
   @Event() ionChange: EventEmitter;
+  @Event() ionNavChanged: EventEmitter;
 
   protected ionViewDidLoad() {
     this.loadConfig('tabsPlacement', 'bottom');
     this.loadConfig('tabsLayout', 'icon-top');
     this.loadConfig('tabsHighlight', true);
 
+
+    // this.tabs = (Array.from(this.el.children) as HTMLIonTabElement[])
+    // .filter(e => e.tagName === 'ION-TAB');
+
+    // for (let tab of this.tabs) {
+    //   const id = `t-${this.tabsId}-${++this.ids}`;
+    //   tab.btnId = 'tab-' + id;
+    //   tab.id = 'tabpanel-' + id;
+    // }
     // TODO: handle navigation parent
     //   if (this.parent) {
     //     // this Tabs has a parent Nav
@@ -215,8 +225,9 @@ export class Tabs {
     //     viewCtrl._setContentRef(elementRef);
     //   }
     // }
-
-    this.initTabs();
+    if (Context.useRouter !== true) {
+      this.initTabs();
+    }
   }
 
   protected ionViewDidUnload() {
@@ -251,10 +262,10 @@ export class Tabs {
    * @param {number|Tab} tabOrIndex Index, or the Tab instance, of the tab to select.
    */
   @Method()
-  select(tabOrIndex: number | HTMLIonTabElement) {
+  select(tabOrIndex: number | HTMLIonTabElement): Promise<any> {
     const selectedTab = (typeof tabOrIndex === 'number' ? this.getByIndex(tabOrIndex) : tabOrIndex);
     if (!selectedTab) {
-      return;
+      return Promise.resolve();
     }
 
     // Reset rest of tabs
@@ -266,22 +277,26 @@ export class Tabs {
     selectedTab.selected = true;
 
     if (this.selectedTab === selectedTab) {
-      selectedTab.goToRoot();
+      return selectedTab.goToRoot();
     } else {
-      const promise = selectedTab._setActive(true);
       const leavingTab = this.selectedTab;
+      let promise = selectedTab._setActive(true);
       if (leavingTab) {
-        promise.then(() => {
-          Context.dom.raf(() => {
-            leavingTab._setActive(false);
-          });
-        });
+        promise = promise.then(() => leavingTab._setActive(false));
       }
+      promise = promise.then(() => {
+        return new Promise((resolve) => {
+          this.ionChange.emit(selectedTab);
+          this.ionNavChanged.emit({ isPop: false });
+          resolve();
+        });
+      });
       this.selectedTab = selectedTab;
       this.selectHistory.push(selectedTab.id);
-      this.ionChange.emit(selectedTab);
+      return promise;
     }
   }
+
 
    /**
    * @param {number} index Index of the tab you want to get
@@ -358,9 +373,33 @@ export class Tabs {
   }
 
   @Method()
-  resize() {
-    const tab = this.getSelected();
-    tab && tab.resize();
+  getState(): NavState {
+    const selectedTab = this.getSelected();
+    if (!selectedTab) {
+      return null;
+    }
+    return {
+      path: selectedTab.path,
+      focusNode: selectedTab
+    };
+  }
+
+  @Method()
+  getRoutes(): RouterEntries {
+    return this.tabs.map(t => {
+      return {
+        path: t.path,
+        id: t
+      };
+    });
+  }
+
+  @Method()
+  setRouteId(id: any, _: any = {}): Promise<any> {
+    if (this.selectedTab === id) {
+      return Promise.resolve();
+    }
+    return this.select(id).then(() => this.getState());
   }
 
   protected render() {

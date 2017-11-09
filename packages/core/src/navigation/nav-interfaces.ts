@@ -4,7 +4,8 @@ import {
   Animation,
   AnimationController,
   AnimationOptions,
-  Config
+  Config,
+  RouterEntries
 } from '..';
 
 export interface FrameworkDelegate {
@@ -24,6 +25,7 @@ export interface NavContainer {
 
 export interface Nav {
   id?: number;
+  routes?: RouterEntries;
   element?: HTMLElement;
   views?: ViewController[];
   transitioning?: boolean;
@@ -38,6 +40,7 @@ export interface Nav {
   childNavs?: Nav[]; // TODO - make nav container
   root?: any;
   navInit?: EventEmitter;
+  ionNavChanged?: EventEmitter;
   config?: Config;
   mode?: string;
 

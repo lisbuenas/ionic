@@ -27,8 +27,6 @@ export class IonApp implements App {
     rootNavs.set((event.detail as Nav).id, (event.detail as Nav));
   }
 
-
-
   componentWillLoad() {
     componentDidLoadImpl(this);
   }
@@ -69,9 +67,11 @@ export class IonApp implements App {
   }
 
   protected render() {
-    return (
-      <slot></slot>
-    );
+    const dom = [<slot></slot>];
+    if (Context.useRouter) {
+      dom.push(<ion-router-controller></ion-router-controller>);
+    }
+    return dom;
   }
 }
 

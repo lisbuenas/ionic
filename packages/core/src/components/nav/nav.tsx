@@ -2,8 +2,9 @@ import { Component, Element, Event, EventEmitter, Listen, Method, Prop } from '@
 import { Config } from '../..';
 import { ComponentDataPair, FrameworkDelegate, Nav, NavController, NavOptions, ViewController } from '../../navigation/nav-interfaces';
 
-import { getActiveImpl, getFirstView, getPreviousImpl, getViews, init } from '../../navigation/nav-utils';
+import { getActiveImpl, getFirstView, getPreviousImpl, getViews, init, resolveRoute } from '../../navigation/nav-utils';
 import { isReady } from '../../utils/helpers';
+import { NavState, RouterEntries, RouterEntry } from '../../index';
 
 @Component({
   tag: 'ion-nav',
@@ -13,7 +14,10 @@ export class IonNav implements Nav {
 
   @Element() element: HTMLElement;
   @Event() navInit: EventEmitter;
+  @Event() ionNavChanged: EventEmitter;
 
+  init = false;
+  routes: RouterEntries = [];
   parent: Nav;
   views: ViewController[];
   transitioning?: boolean;
@@ -34,8 +38,24 @@ export class IonNav implements Nav {
     init(this);
   }
 
+  @Listen('ionRouteAdded')
+  routeAdded(ev: CustomEvent) {
+    this.addRoute(ev.detail);
+  }
+
+  @Listen('ionRouteRemoved')
+  routeRemoved(ev: CustomEvent) {
+    this.removeRoute(ev.detail);
+  }
+
   componentDidLoad() {
-    componentDidLoadImpl(this);
+    if (this.init) {
+      return;
+    }
+    this.init = true;
+    if (Context.useRouter !== true) {
+      componentDidLoadImpl(this);
+    }
   }
 
   getViews(): ViewController[] {
@@ -127,10 +147,58 @@ export class IonNav implements Nav {
     navInitializedImpl(this, event);
   }
 
+  @Method()
+  addRoute(route: RouterEntry) {
+    this.routes.push(route);
+  }
+
+  @Method()
+  removeRoute(_: RouterEntry) {
+    throw 'not implemented';
+    // this.routes.delete(route.path);
+  }
+
+  @Method()
+  getState(): NavState {
+    return getState(this);
+  }
+
+  @Method()
+  setRouteId(id: string, _: any = {}): Promise<NavState> {
+    const active = this.getActive();
+    if (active && active.component === id) {
+      return Promise.resolve().then(() => this.getState());
+    }
+    return this.setRoot(id)
+      .then(() => this.getState());
+  }
+
+  @Method()
+  getRoutes(): RouterEntries {
+    return this.routes;
+  }
 
   protected render() {
     return <slot></slot>;
   }
+}
+
+export function getState(nav: Nav): NavState {
+  const active = getActiveImpl(nav);
+  if (!active) {
+    return null;
+  }
+  const component = active.component;
+  const route = resolveRoute(nav, component);
+  if (!route) {
+    console.error('cant reverse route by component', component);
+    return null;
+  }
+
+  return {
+    path: route.path,
+    focusNode: active.element
+  };
 }
 
 export function componentDidLoadImpl(nav: Nav) {
